@@ -1,21 +1,17 @@
 <template>
-  <div>
+  <div class="big">
     <panel-lottie
-      :animationDataPath="animationDataPathOne"
-      :height="40"
-      :width="40"
+      :animationDataPath="animationDataPathFive"
+      :h="100"
+      :w="100"
+      :autoplay="false"
+      :className="1"
+      :loop="true"
+      :title="'我是文本'"
+      :number="2020"
+      
     ></panel-lottie>
-    <panel-lottie
-      :animationDataPath="animationDataPathOne"
-      :height="60"
-      :width="60"
-    ></panel-lottie>
-    <panel-lottie
-      :animationDataPath="animationDataPathOne"
-      :height="80"
-      :width="80"
-    ></panel-lottie>
-    <panel-lottie :animationDataPath="animationDataPathTwo"></panel-lottie>
+    
   </div>
 </template>
 
@@ -28,16 +24,21 @@ export default {
   },
   data() {
     return {
+      // 导入lottie动画json
       animationDataPathOne: require('../assets/json/compass.json'),
       animationDataPathTwo: require('../assets/json/api.json'),
       animationDataPathThree: require('../assets/json/dev.json'),
       animationDataPathFour: require('../assets/json/update.json'),
+      animationDataPathFive: require('../assets/json/search.json'),
     }
   },
 }
 </script>
 
 <style lang="less">
+.big{
+  background-color: rgb(240, 242, 245);
+}
 .panel-group {
   margin-top: 18px;
   .card-panel-col {

@@ -10,14 +10,14 @@ export default {
       type: Object,
       required: true,
     },
-    height: Number,
-    width: Number,
+    h: Number,
+    w: Number,
   },
   data() {
     return {
       style: {
-        width: this.width ? `${this.width}px` : '100%',
-        height: this.height ? `${this.height}px` : '100%',
+        width: this.w ? `${this.w}px` : '100%',
+        height: this.h ? `${this.h}px` : '100%',
         overflow: 'hidden',
         margin: '0 auto',
       },

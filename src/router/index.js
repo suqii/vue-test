@@ -25,7 +25,12 @@ const routes = [
     component: () =>
       import('../views/Lottie.vue'),
   },
-  
+  {
+    path: '/test',
+    name: 'Test',
+    component: () =>
+      import('../views/Test.vue'),
+  },
 ]
 
 const router = new VueRouter({
