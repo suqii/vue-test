@@ -50,12 +50,13 @@ var client = new OSS({
 })
 
 export default {
-  name: 'Test',
+  name: 'Alioss',
   components: { uploadimg },
   data() {
     return {
       list: [],
       testList: [],
+      uploadPath:'MK/',
       imgList: [],
       limit: 2,
       path: '',
@@ -66,7 +67,7 @@ export default {
   methods: {
     uploadpic(file) {
       client
-        .put(file.file.name, file.file)
+        .put(this.uploadPath+file.file.name, file.file)
         .then((res) => {
           this.list.push({ url: res.url })
         })
