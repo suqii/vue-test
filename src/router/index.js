@@ -31,6 +31,12 @@ const routes = [
     component: () =>
       import('../views/Test.vue'),
   },
+  {
+    path: '/alioss',
+    name: 'Alioss',
+    component: () =>
+      import('../views/Alioss.vue'),
+  },
 ]
 
 const router = new VueRouter({
