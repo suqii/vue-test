@@ -14,7 +14,7 @@ import ElementLocale from 'element-ui/lib/locale'
 import lottie from 'vue-lottie';
 
 Vue.component('lottie', lottie);
-Vue.use(ElementUI);
+Vue.use(ElementUI,{zhLocale});
 Vue.use(VueI18n)
 Vue.use(VueI18n)
 const messages = {
