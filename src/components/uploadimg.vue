@@ -1,28 +1,56 @@
 <template>
   <div id="uploadimg">
-    <el-upload
-      action="''"
-      list-type="picture-card"
-      :http-request="uploadpic"
-      :before-upload="beforeAvatarUpload"
-      :on-preview="handlePictureCardPreview"
-      :on-remove="handleRemove"
-      :file-list="showlist"
-    >
-      <i class="el-icon-plus"></i>
-    </el-upload>
-    <el-image-viewer
-      v-if="showViewer"
-      :on-close="closeViewer"
-      :url-list="picList"
-    />
-
-    <el-cascader
-      v-model="value"
-      :options="options"
-      :props="{ expandTrigger: 'hover' }"
-      @change="handleChange"
-    ></el-cascader>
+    <el-form ref="form">
+      <el-form-item label="当前文件">
+        <el-upload
+          action="''"
+          list-type="picture-card"
+          :http-request="uploadpic"
+          :before-upload="beforeAvatarUpload"
+          :on-preview="handlePictureCardPreview"
+          :on-remove="handleRemove"
+          :file-list="showlist"
+        >
+          <i class="el-icon-plus"></i>
+        </el-upload>
+        <el-image-viewer
+          v-if="showViewer"
+          :on-close="closeViewer"
+          :url-list="picList"
+        />
+      </el-form-item>
+      <el-form-item label="阿里云bucket">
+        <el-input v-model="keySet.bucket"></el-input>
+      </el-form-item>
+      <el-form-item label="阿里云key">
+        <el-input v-model="keySet.key"></el-input>
+      </el-form-item>
+      <el-form-item label="testValue">
+        <el-input v-model="testValue"></el-input>
+      </el-form-item>
+      <el-form-item label="阿里云secret">
+        <el-input v-model="keySet.secret"></el-input>
+      </el-form-item>
+      <el-form-item label="所在区域">
+        <el-select v-model="keySet.region" placeholder="请选择所在区域">
+          <el-option label="上海数据中心" value="shanghai"></el-option>
+          <el-option label="杭州数据中心" value="hangzhou"></el-option>
+          <el-option label="青岛数据中心" value="qingdao"></el-option>
+          <el-option label="北京数据中心" value="beijing"></el-option>
+          <el-option label="香港数据中心" value="hongkong"></el-option>
+          <el-option label="深圳数据中心" value="shenzhen"></el-option>
+        </el-select>
+      </el-form-item>
+      <!-- 当前文件路径 -->
+      <el-form-item label="当前文件路径">
+        <el-cascader
+          v-model="value"
+          :options="options"
+          :props="{ expandTrigger: 'hover' }"
+          @change="handleChange"
+        ></el-cascader>
+      </el-form-item>
+    </el-form>
   </div>
 </template>
 <script>
@@ -30,8 +58,8 @@ const OSS = require('ali-oss')
 var client = new OSS({
   //以下请输入自己的配置
   region: 'oss-cn-beijing',
-  accessKeyId: 'LTAI5tB5S5bak4Q325o4EgcR',
-  accessKeySecret: 'o0CvstEPN7a1hOSugTlaNhAfjnKdvH',
+  accessKeyId: 'LTAI5tB5S5bak'+'4Q325o4EgcR',
+  accessKeySecret: 'o0CvstEPN7a1hO'+'SugTlaNhAfjnKdvH',
   bucket: 'suqiqi',
 })
 //element-ui  upload修改预览功能，需安装element-ui
@@ -81,6 +109,13 @@ export default {
           label: 'Markdown图片',
         },
       ],
+      testValue: 'testValue',
+      keySet: {
+        bucket: 'suqiqi',
+        key: '',
+        region: 'beijing',
+        secret: '',
+      },
       showViewer: false,
       showlist: [],
       imgList: [],
@@ -173,6 +208,24 @@ export default {
       for (let i in val) {
         this.picList.push(val[i].url)
       }
+    },
+    // keySet
+    keySet: {
+      handler: function(val) {
+        //do something
+        // console.log("改变了")
+        // console.log(val)
+        
+        // client = new OSS({
+        //   //以下请输入自己的配置
+        //   region: val.region,
+        //   accessKeyId: val.accessKeyId,
+        //   accessKeySecret: val.accessKeySecret,
+        //   bucket: val.bucket,
+        // })
+        // console.log(client)
+      },
+      deep: true,
     },
   },
 }
