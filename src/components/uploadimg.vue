@@ -1,6 +1,45 @@
 <template>
   <div id="uploadimg">
     <el-form ref="form">
+      <!-- bucket选择 -->
+      <el-form-item label="阿里云bucket">
+        <el-input v-model="keySet.bucket"></el-input>
+      </el-form-item>
+      <!-- key -->
+      <el-form-item label="阿里云key">
+        <el-input v-model="keySet.accessKeyId"></el-input>
+      </el-form-item>
+      <!-- <el-form-item label="testValue">
+        <el-input v-model="testValue"></el-input>
+      </el-form-item> -->
+      <!-- secret -->
+      <el-form-item label="阿里云secret">
+        <el-input v-model="keySet.accessKeySecret"></el-input>
+      </el-form-item>
+      <!-- 区域选择 -->
+      <el-form-item label="所在区域">
+        <el-select v-model="keySet.region" placeholder="请选择所在区域">
+          <el-option label="上海数据中心" value="oss-cn-shanghai"></el-option>
+          <el-option label="杭州数据中心" value="oss-cn-hangzhou"></el-option>
+          <el-option label="青岛数据中心" value="oss-cn-qingdao"></el-option>
+          <el-option label="北京数据中心" value="oss-cn-beijing"></el-option>
+          <el-option label="香港数据中心" value="oss-cn-hongkong"></el-option>
+          <el-option label="深圳数据中心" value="oss-cn-shenzhen"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-button type="primary" @click="concetOss" size="mini"
+        >连接测试</el-button
+      >
+      <!-- 路径选择 -->
+      <el-form-item label="当前文件路径">
+        <el-cascader
+          v-model="value"
+          :options="options"
+          :props="{ expandTrigger: 'hover' }"
+          @change="handleChange"
+        ></el-cascader>
+      </el-form-item>
+      <!-- 当前路径下的文件 -->
       <el-form-item label="当前文件">
         <el-upload
           action="''"
@@ -19,37 +58,6 @@
           :url-list="picList"
         />
       </el-form-item>
-      <el-form-item label="阿里云bucket">
-        <el-input v-model="keySet.bucket"></el-input>
-      </el-form-item>
-      <el-form-item label="阿里云key">
-        <el-input v-model="keySet.key"></el-input>
-      </el-form-item>
-      <el-form-item label="testValue">
-        <el-input v-model="testValue"></el-input>
-      </el-form-item>
-      <el-form-item label="阿里云secret">
-        <el-input v-model="keySet.secret"></el-input>
-      </el-form-item>
-      <el-form-item label="所在区域">
-        <el-select v-model="keySet.region" placeholder="请选择所在区域">
-          <el-option label="上海数据中心" value="shanghai"></el-option>
-          <el-option label="杭州数据中心" value="hangzhou"></el-option>
-          <el-option label="青岛数据中心" value="qingdao"></el-option>
-          <el-option label="北京数据中心" value="beijing"></el-option>
-          <el-option label="香港数据中心" value="hongkong"></el-option>
-          <el-option label="深圳数据中心" value="shenzhen"></el-option>
-        </el-select>
-      </el-form-item>
-      <!-- 当前文件路径 -->
-      <el-form-item label="当前文件路径">
-        <el-cascader
-          v-model="value"
-          :options="options"
-          :props="{ expandTrigger: 'hover' }"
-          @change="handleChange"
-        ></el-cascader>
-      </el-form-item>
     </el-form>
   </div>
 </template>
@@ -58,8 +66,8 @@ const OSS = require('ali-oss')
 var client = new OSS({
   //以下请输入自己的配置
   region: 'oss-cn-beijing',
-  accessKeyId: 'LTAI5tB5S5bak'+'4Q325o4EgcR',
-  accessKeySecret: 'o0CvstEPN7a1hO'+'SugTlaNhAfjnKdvH',
+  accessKeyId: 'LTAI5tB5S5bak' + '4Q325o4EgcR',
+  accessKeySecret: 'o0CvstEPN7a1hO' + 'SugTlaNhAfjnKdvH',
   bucket: 'suqiqi',
 })
 //element-ui  upload修改预览功能，需安装element-ui
@@ -75,6 +83,12 @@ export default {
   data() {
     return {
       value: ['MK'],
+      options2: [],
+      optionItem: {
+        value: 'test',
+        label: '测试',
+        children: [],
+      },
       options: [
         {
           value: 'test',
@@ -111,10 +125,10 @@ export default {
       ],
       testValue: 'testValue',
       keySet: {
+        region: 'oss-cn-beijing',
+        accessKeyId: 'LTAI5tB5S5bak' + '4Q325o4EgcR',
+        accessKeySecret: 'o0CvstEPN7a1hO' + 'SugTlaNhAfjnKdvH',
         bucket: 'suqiqi',
-        key: '',
-        region: 'beijing',
-        secret: '',
       },
       showViewer: false,
       showlist: [],
@@ -125,9 +139,19 @@ export default {
   created() {
     this.fileList('MK')
   },
-  mounted() {},
+  mounted() {
+    this.filePathList()
+    // this.test('test/')
+  },
 
   methods: {
+    // 连接测试
+    concetOss() {
+      console.log('连接测试')
+      console.log(this.keySet)
+      client = new OSS(this.keySet)
+      console.log(client)
+    },
     // 选中
     handleChange(value) {
       // console.log(value)
@@ -150,12 +174,105 @@ export default {
           marker: '',
         })
         this.imgList = result.objects
-        console.log(this.imgList)
-
+        // console.log(this.imgList)
         this.getimgdata()
       } catch (e) {
         console.log(e)
       }
+    },
+    // 获取根目录列表
+    async filePathList(prefix, marker) {
+      let _this = this
+      let options2 = []
+      let optionItem = {
+        value: 'test',
+        label: '测试',
+        children: [],
+      }
+      try {
+        // 返回当前文件夹下的文件
+        let rootPathGet = await client.list({
+          prefix: '',
+          delimiter: '/',
+        })
+        let rootPath = rootPathGet.prefixes
+        rootPath.forEach((item) => {
+          optionItem.value = item
+          optionItem.label = item
+          options2.push(optionItem)
+          // this.test(item).then(
+          //   function(data) {
+          //     // console.log('回调成功')
+          //     console.log(data.prefixes)
+          //     if(data.prefixes){
+          //       console.log("继续")
+          //     }else{
+          //     }
+          //   },
+          //   function() {
+          //     // console.log('回调失败')
+          //   }
+          // )
+        })
+        console.log(options2)
+        // console.log(rootPath)
+      } catch (e) {
+        console.log(e)
+      }
+    },
+
+    // 获取子目录列表
+    async getPathLists(prefix) {
+      try {
+        let pathLists = await client.list({
+          prefix: prefix,
+          delimiter: '/',
+        })
+        console.log(pathLists.prefixes)
+        return pathLists.prefixes
+      } catch (e) {
+        console.log(e)
+      }
+    },
+    // 获取子目录列表
+    async test(prefix) {
+      let _this = this
+      let options2 = []
+      let optionItem = {
+        value: 'test',
+        label: '测试',
+        children: [],
+      }
+      return await new Promise(function(resolve, reject) {
+        let rootPathGet = client.list({
+          prefix: prefix,
+          delimiter: '/',
+        })
+        rootPathGet.then(
+          function(data) {
+            console.log(data.prefixes)
+            // // 如果还有子文件
+            if (data.prefixes) {
+              console.log('还有子文件')
+              data.prefixes.forEach((item) => {
+                optionItem.value = item
+                optionItem.label = item
+                _this.options2.push(optionItem)
+                _this.test(item)
+              })
+            } else {
+              console.log('无子文件')
+            }
+            // 输出结果
+            console.log('结果输出为下：')
+            console.log(_this.options2)
+          },
+          function() {
+            // console.log('回调失败')
+          }
+        )
+        resolve(rootPathGet)
+      })
     },
     //获取图片列表
     getimgdata() {
@@ -213,9 +330,9 @@ export default {
     keySet: {
       handler: function(val) {
         //do something
-        // console.log("改变了")
+        console.log('改变了')
+        console.log(val)
         // console.log(val)
-        
         // client = new OSS({
         //   //以下请输入自己的配置
         //   region: val.region,
