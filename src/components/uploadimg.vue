@@ -140,7 +140,7 @@ export default {
     this.fileList('MK')
   },
   mounted() {
-    this.filePathList()
+    // this.filePathList()
     // this.test('test/')
   },
 
@@ -330,8 +330,8 @@ export default {
     keySet: {
       handler: function(val) {
         //do something
-        console.log('改变了')
-        console.log(val)
+        // console.log('改变了')
+        // console.log(val)
         // console.log(val)
         // client = new OSS({
         //   //以下请输入自己的配置
