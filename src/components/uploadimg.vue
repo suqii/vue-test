@@ -1,64 +1,116 @@
 <template>
-  <div id="uploadimg">
-    <el-form ref="form">
-      <!-- bucket选择 -->
-      <el-form-item label="阿里云bucket">
-        <el-input v-model="keySet.bucket"></el-input>
-      </el-form-item>
-      <!-- key -->
-      <el-form-item label="阿里云key">
-        <el-input v-model="keySet.accessKeyId"></el-input>
-      </el-form-item>
-      <!-- <el-form-item label="testValue">
-        <el-input v-model="testValue"></el-input>
-      </el-form-item> -->
-      <!-- secret -->
-      <el-form-item label="阿里云secret">
-        <el-input v-model="keySet.accessKeySecret"></el-input>
-      </el-form-item>
-      <!-- 区域选择 -->
-      <el-form-item label="所在区域">
-        <el-select v-model="keySet.region" placeholder="请选择所在区域">
-          <el-option label="上海数据中心" value="oss-cn-shanghai"></el-option>
-          <el-option label="杭州数据中心" value="oss-cn-hangzhou"></el-option>
-          <el-option label="青岛数据中心" value="oss-cn-qingdao"></el-option>
-          <el-option label="北京数据中心" value="oss-cn-beijing"></el-option>
-          <el-option label="香港数据中心" value="oss-cn-hongkong"></el-option>
-          <el-option label="深圳数据中心" value="oss-cn-shenzhen"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-button type="primary" @click="concetOss" size="mini"
-        >连接测试</el-button
+  <div>
+    <!-- 表头 -->
+    <el-row>
+      <el-col :span="24"
+        ><div class="grid-content header">阿里OSS文件上传</div></el-col
       >
-      <!-- 路径选择 -->
-      <el-form-item label="当前文件路径">
-        <el-cascader
-          v-model="value"
-          :options="options"
-          :props="{ expandTrigger: 'hover' }"
-          @change="handleChange"
-        ></el-cascader>
-      </el-form-item>
-      <!-- 当前路径下的文件 -->
-      <el-form-item label="当前文件">
-        <el-upload
-          action="''"
-          list-type="picture-card"
-          :http-request="uploadpic"
-          :before-upload="beforeAvatarUpload"
-          :on-preview="handlePictureCardPreview"
-          :on-remove="handleRemove"
-          :file-list="showlist"
-        >
-          <i class="el-icon-plus"></i>
-        </el-upload>
-        <el-image-viewer
-          v-if="showViewer"
-          :on-close="closeViewer"
-          :url-list="picList"
-        />
-      </el-form-item>
-    </el-form>
+    </el-row>
+    <!-- 内容 -->
+    <el-row :gutter="15">
+      <!-- 左边选项区 -->
+      <el-col :span="11" class="divided"
+        ><div class="grid-content left-con">
+          <el-form ref="form">
+            <!-- bucket选择 -->
+            <el-form-item label="阿里云bucket">
+              <el-input v-model="keySet.bucket"></el-input>
+            </el-form-item>
+            <!-- bucket选择 -->
+            <!-- <el-form-item label="testValue">
+            <el-input v-model="testValue"></el-input>
+          </el-form-item> -->
+            <!-- key -->
+            <el-form-item label="阿里云key">
+              <el-input v-model="keySet.accessKeyId"></el-input>
+            </el-form-item>
+            <!-- secret -->
+            <el-form-item label="阿里云secret">
+              <el-input v-model="keySet.accessKeySecret"></el-input>
+            </el-form-item>
+            <!-- 区域选择 -->
+            <el-form-item label="所在区域">
+              <el-select v-model="keySet.region" placeholder="请选择所在区域">
+                <el-option
+                  label="上海数据中心"
+                  value="oss-cn-shanghai"
+                ></el-option>
+                <el-option
+                  label="杭州数据中心"
+                  value="oss-cn-hangzhou"
+                ></el-option>
+                <el-option
+                  label="青岛数据中心"
+                  value="oss-cn-qingdao"
+                ></el-option>
+                <el-option
+                  label="北京数据中心"
+                  value="oss-cn-beijing"
+                ></el-option>
+                <el-option
+                  label="香港数据中心"
+                  value="oss-cn-hongkong"
+                ></el-option>
+                <el-option
+                  label="深圳数据中心"
+                  value="oss-cn-shenzhen"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <!-- 路径选择 -->
+            <el-form-item label="当前文件路径">
+              <el-cascader
+                v-model="value"
+                :options="options"
+                :props="{ expandTrigger: 'hover' }"
+                @change="handleChange"
+              ></el-cascader>
+            </el-form-item>
+            <!-- 连接测试 -->
+            <el-button type="primary" @click="concetOss" size="mini"
+              >连接</el-button
+            >
+          </el-form>
+        </div></el-col
+      >
+      <el-col :span="1">
+        <el-divider direction="vertical"></el-divider>
+      </el-col>
+      <!-- 右边内容区 -->
+      <el-col :span="12">
+        <!-- 已经连接 -->
+        <div v-if="!nothingFlag" class="grid-content right-con">
+          <el-form>
+            <!-- 当前路径下的文件 -->
+            <el-form-item label="">
+              <el-upload
+                action="''"
+                list-type="picture-card"
+                :http-request="uploadpic"
+                :before-upload="beforeAvatarUpload"
+                :on-preview="handlePictureCardPreview"
+                :on-remove="handleRemove"
+                :on-success="handleRemove"
+                :file-list="showlist"
+              >
+                <i class="el-icon-plus"></i>
+              </el-upload>
+              <el-image-viewer
+                v-if="showViewer"
+                :on-close="closeViewer"
+                :url-list="picList"
+              />
+            </el-form-item>
+          </el-form>
+        </div>
+        <!-- 未连接 -->
+        <el-empty
+          v-else
+          image="https://suqiqi.oss-cn-beijing.aliyuncs.com/MK/%E6%9A%82%E6%97%A0%E5%86%85%E5%AE%B9.png"
+          description="暂无数据"
+        ></el-empty>
+      </el-col>
+    </el-row>
   </div>
 </template>
 <script>
@@ -84,6 +136,7 @@ export default {
     return {
       value: ['MK'],
       options2: [],
+      nothingFlag: true,
       optionItem: {
         value: 'test',
         label: '测试',
@@ -119,11 +172,21 @@ export default {
           ],
         },
         {
+          value: 'data',
+          label: 'data',
+          children: [
+            {
+              value: 'freeFind',
+              label: 'freeFind',
+            },
+          ],
+        },
+        {
           value: 'MK',
           label: 'Markdown图片',
         },
       ],
-      testValue: 'testValue',
+      testValue: null,
       keySet: {
         region: 'oss-cn-beijing',
         accessKeyId: 'LTAI5tB5S5bak' + '4Q325o4EgcR',
@@ -137,7 +200,7 @@ export default {
     }
   },
   created() {
-    this.fileList('MK')
+    // this.fileList('MK')
   },
   mounted() {
     // this.filePathList()
@@ -150,11 +213,13 @@ export default {
       console.log('连接测试')
       console.log(this.keySet)
       client = new OSS(this.keySet)
-      console.log(client)
+      // console.log(client)
+      // this.fileList()
+      this.fileList('MK')
     },
     // 选中
     handleChange(value) {
-      // console.log(value)
+      console.log(value)
       let _this = this
       _this.path = ''
       value.forEach(function(e) {
@@ -175,9 +240,26 @@ export default {
         })
         this.imgList = result.objects
         // console.log(this.imgList)
+
+        this.nothingFlag = false
         this.getimgdata()
       } catch (e) {
-        console.log(e)
+        // console.log(e.toString())
+        let failReson = null
+        switch (e.toString()) {
+          case 'InvalidAccessKeyIdError: The OSS Access Key Id you provided does not exist in our records.':
+            failReson = '您提供的OSS访问密钥Id在记录中不存在。'
+            break
+          case 'SignatureDoesNotMatchError: The request signature we calculated does not match the signature you provided. Check your key and signing method.':
+            failReson = '您提供的OSS访问密钥与Key不匹配。'
+            break
+          default:
+            break
+        }
+        this.$message({
+          message: '连接失败！' + '失败原因：' + failReson,
+          type: 'warning',
+        })
       }
     },
     // 获取根目录列表
@@ -280,6 +362,11 @@ export default {
       for (let i in this.showlist) {
         this.picList.push(this.showlist[i].url)
       }
+      this.$message({
+        message: '文件获取成功',
+        type: 'success',
+        duration: 700,
+      })
     },
     //点击预览图片
     handlePictureCardPreview(file) {
@@ -347,4 +434,34 @@ export default {
   },
 }
 </script>
-<style scoped></style>
+<style scoped>
+.header {
+  /* border: 1px red solid; */
+  text-align: center;
+  font-size: 40px;
+  font-weight: bold;
+  margin-bottom: 2em;
+}
+.divided {
+  /* background: #000; */
+  /* border-right: 1px black solid; */
+}
+.el-row {
+  /* height: 100vh; */
+}
+.el-col {
+  height: 100%;
+  /* border-right: 1px black solid; */
+}
+/* 分割线 */
+.el-divider--vertical {
+  /* background: #000; */
+  /* display:inline-block; */
+  /* width:1px; */
+  /* height: 100%; */
+  height: 500px;
+  /* margin:0 8px; */
+  /* vertical-align:middle;  */
+  /* position:relative; */
+}
+</style>
