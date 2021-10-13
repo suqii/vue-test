@@ -66,6 +66,10 @@
                 @change="handleChange"
               ></el-cascader>
             </el-form-item>
+            <!-- 图片路径 -->
+            <el-form-item label="图片url">
+              <el-input v-model="selectImgUrl"></el-input>
+            </el-form-item>
             <!-- 连接测试 -->
             <el-button type="primary" @click="concetOss" size="mini"
               >连接</el-button
@@ -97,6 +101,7 @@
               </el-upload>
               <el-image-viewer
                 v-if="showViewer"
+                :on-switch="picSwitch"
                 :on-close="closeViewer"
                 :url-list="picList"
               />
@@ -106,8 +111,8 @@
         <!-- 未连接 -->
         <el-empty
           v-else
-          image="https://suqiqi.oss-cn-beijing.aliyuncs.com/MK/%E6%9A%82%E6%97%A0%E5%86%85%E5%AE%B9.png"
-          description="暂无数据"
+          image="https://z3.ax1x.com/2021/10/13/5KypXF.png"
+          description="还未连接，暂无数据"
         ></el-empty>
       </el-col>
     </el-row>
@@ -134,7 +139,7 @@ export default {
   props: ['list', 'uploadpic', 'limit'],
   data() {
     return {
-      value: ['MK'],
+      value: ['freeFind'],
       options2: [],
       nothingFlag: true,
       optionItem: {
@@ -143,6 +148,10 @@ export default {
         children: [],
       },
       options: [
+        {
+          value: 'freeFind',
+          label: 'freeFind',
+        },
         {
           value: 'test',
           label: '测试',
@@ -194,6 +203,7 @@ export default {
         bucket: 'suqiqi',
       },
       showViewer: false,
+      selectImgUrl: '',
       showlist: [],
       imgList: [],
       picList: [],
@@ -211,11 +221,11 @@ export default {
     // 连接测试
     concetOss() {
       console.log('连接测试')
-      console.log(this.keySet)
+      // console.log(this.keySet)
       client = new OSS(this.keySet)
       // console.log(client)
       // this.fileList()
-      this.fileList('MK')
+      this.fileList('freeFind')
     },
     // 选中
     handleChange(value) {
@@ -233,14 +243,12 @@ export default {
       try {
         // 不带任何参数，默认最多返回1000个文件
         let result = await client.list()
-
         result = await client.list({
           prefix: prefix,
           marker: '',
         })
         this.imgList = result.objects
         // console.log(this.imgList)
-
         this.nothingFlag = false
         this.getimgdata()
       } catch (e) {
@@ -397,6 +405,11 @@ export default {
     //关闭预览图片
     closeViewer() {
       this.showViewer = false
+    },
+    //切换每一张时触发
+    picSwitch(val) {
+      // console.log(val)
+      this.selectImgUrl = this.picList[val]
     },
     beforeAvatarUpload(file) {
       let isLt = file.size / 1024 / 1024 < this.limit

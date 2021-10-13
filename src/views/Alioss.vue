@@ -3,21 +3,6 @@
     <uploadimg :list.sync="list" :uploadpic="uploadpic" :limit="limit" />
     <el-form>
       <el-form-item label="">
-        <!-- <el-button type="primary" @click="fileList" size="mini"
-          >文件列表</el-button
-        >
-        <el-button type="primary" @click="listDir" size="mini"
-          >listDir</el-button
-        > -->
-        <!-- 路径选择 -->
-            <el-form-item label="当前文件路径">
-              <el-cascader
-                v-model="value"
-                :options="options"
-                :props="{ expandTrigger: 'hover' }"
-                @change="handleChange"
-              ></el-cascader>
-            </el-form-item>
       
       </el-form-item>
 
@@ -46,63 +31,16 @@ export default {
     return {
       list: [],
       testList: [],
-      uploadPath:'MK/',
+      uploadPath:'freeFind/',
       imgList: [],
       limit: 2,
       path: '',
-      value: ['test', 'testChild', 'testChild1'],
-      options: [
-        {
-          value: 'test',
-          label: '测试',
-          children: [
-            {
-              value: 'testChild',
-              label: '测试上传区',
-              children: [
-                {
-                  value: 'testChild1',
-                  label: '上传子区1',
-                },
-                {
-                  value: 'testChild2',
-                  label: '上传子区2',
-                },
-                {
-                  value: null,
-                  label: '当前目录',
-                },
-              ],
-            },
-            {
-              value: 'headImg',
-              label: '头像',
-            },
-          ],
-        },
-        {
-          value: 'data',
-          label: 'data',
-          children: [
-            {
-              value: 'freeFind',
-              label: 'freeFind',
-            },
-          ],
-        },
-        {
-          value: 'MK',
-          label: 'Markdown图片',
-        },
-      ],
     }
   },
   methods: {
     uploadpic(file) {
-      this.handleChange()
-      console.log("上传目录"+this.uploadPath)
-     
-
+      // this.handleChange()
+      // console.log("上传目录"+this.uploadPath)
       client
         .put(this.uploadPath+file.file.name, file.file)
         .then((res) => {
