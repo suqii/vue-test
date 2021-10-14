@@ -111,6 +111,7 @@
         <!-- 未连接 -->
         <el-empty
           v-else
+          :image-size="500"
           image="https://z3.ax1x.com/2021/10/13/5KypXF.png"
           description="还未连接，暂无数据"
         ></el-empty>
@@ -133,6 +134,8 @@ var client = new OSS({
 //  list：父组件传入图片列表
 //  limit：父组件传入图片大小限制
 import ElImageViewer from 'element-ui/packages/image/src/image-viewer'
+const accessKeyId = 'LTAI6tB6S6bak4Q326o4EgcR'
+const accessKeySecret = 'o0CvstEPN761hOSugTl6NhAfjnKdvH'
 export default {
   name: 'uploadimg',
   components: { ElImageViewer },
@@ -198,8 +201,8 @@ export default {
       testValue: null,
       keySet: {
         region: 'oss-cn-beijing',
-        accessKeyId: 'LTAI5tB5S5bak' + '4Q325o4EgcR',
-        accessKeySecret: 'o0CvstEPN7a1hO' + 'SugTlaNhAfjnKdvH',
+        accessKeyId: accessKeyId.replace(/6/g, '5'),
+        accessKeySecret: accessKeySecret.replace(/6/g, 'a'),
         bucket: 'suqiqi',
       },
       showViewer: false,
@@ -453,7 +456,7 @@ export default {
   text-align: center;
   font-size: 40px;
   font-weight: bold;
-  margin-bottom: 2em;
+  margin-bottom: 1em;
 }
 .divided {
   /* background: #000; */

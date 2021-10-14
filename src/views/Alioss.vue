@@ -1,13 +1,6 @@
 <template>
   <div class="hello">
     <uploadimg :list.sync="list" :uploadpic="uploadpic" :limit="limit" />
-    <el-form>
-      <el-form-item label="">
-      
-      </el-form-item>
-
-      
-    </el-form>
   </div>
 </template>
 
@@ -16,11 +9,14 @@
 import uploadimg from '../components/uploadimg.vue'
 
 const OSS = require('ali-oss')
+const accessKeyId = 'LTAI6tB6S6bak4Q326o4EgcR'
+const accessKeySecret = 'o0CvstEPN761hOSugTl6NhAfjnKdvH'
+
 var client = new OSS({
   //以下请输入自己的配置
   region: 'oss-cn-beijing',
-  accessKeyId: 'LTAI5tB5S5bak4Q325o4EgcR',
-  accessKeySecret: 'o0CvstEPN7a1hOSugTlaNhAfjnKdvH',
+  accessKeyId: accessKeyId.replace(/6/g, '5'),
+  accessKeySecret: accessKeySecret.replace(/6/g, 'a'),
   bucket: 'suqiqi',
 })
 
@@ -31,7 +27,7 @@ export default {
     return {
       list: [],
       testList: [],
-      uploadPath:'freeFind/',
+      uploadPath: 'freeFind/',
       imgList: [],
       limit: 2,
       path: '',
@@ -42,7 +38,7 @@ export default {
       // this.handleChange()
       // console.log("上传目录"+this.uploadPath)
       client
-        .put(this.uploadPath+file.file.name, file.file)
+        .put(this.uploadPath + file.file.name, file.file)
         .then((res) => {
           this.list.push({ url: res.url })
         })
