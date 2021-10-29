@@ -9,8 +9,8 @@
 import uploadimg from '../components/uploadimg.vue'
 
 const OSS = require('ali-oss')
-const accessKeyId = 'LTAI6tB6S6bak4Q326o4EgcR'
-const accessKeySecret = 'o0CvstEPN761hOSugTl6NhAfjnKdvH'
+const accessKeyId = 'id'
+const accessKeySecret = 'secret'
 
 var client = new OSS({
   //以下请输入自己的配置

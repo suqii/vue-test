@@ -124,8 +124,8 @@ const OSS = require('ali-oss')
 var client = new OSS({
   //以下请输入自己的配置
   region: 'oss-cn-beijing',
-  accessKeyId: 'LTAI5tB5S5bak' + '4Q325o4EgcR',
-  accessKeySecret: 'o0CvstEPN7a1hO' + 'SugTlaNhAfjnKdvH',
+  accessKeyId: 'id',
+  accessKeySecret: 'secret',
   bucket: 'suqiqi',
 })
 //element-ui  upload修改预览功能，需安装element-ui
@@ -134,8 +134,8 @@ var client = new OSS({
 //  list：父组件传入图片列表
 //  limit：父组件传入图片大小限制
 import ElImageViewer from 'element-ui/packages/image/src/image-viewer'
-const accessKeyId = 'LTAI6tB6S6bak4Q326o4EgcR'
-const accessKeySecret = 'o0CvstEPN761hOSugTl6NhAfjnKdvH'
+const accessKeyId = 'id'
+const accessKeySecret = 'secret'
 export default {
   name: 'uploadimg',
   components: { ElImageViewer },
