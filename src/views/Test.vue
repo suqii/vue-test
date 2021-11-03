@@ -1,38 +1,58 @@
 <template>
-  <el-row :gutter="10">
-    <el-col :span="12"><div class="grid-content bg-purple">1</div></el-col>
-    <el-col :span="12"><div class="grid-content bg-purple-light">2</div></el-col>
-  </el-row>
+  <div class="hello">
+    <el-upload
+      action="/oss"
+      :http-request="httpRequest"
+      list-type="picture-card"
+      :limit="1"
+      :on-remove="handleRemove"
+      :on-change="onChange"
+      :class="{ hide: showUpload }"
+    >
+      <i class="el-icon-plus"></i>
+    </el-upload>
+  </div>
 </template>
 
 <script>
 export default {
-  name: 'uploadimg',
-  components: {},
-  props: ['list', 'uploadpic', 'limit'],
+  name: 'HelloWorld',
   data() {
     return {
-      value: ['test', 'testChild', 'testChild1'],
+      showUpload: false,
+      picFile: null,
+      fd: {},
     }
   },
-  created() {},
-  mounted() {},
-
-  methods: {},
-  watch: {},
+  methods: {
+    handleRemove(file, fileList) {
+      // console.log('handleRemove')
+      if (fileList.length < 1) {
+        this.showUpload = false
+      }
+    },
+    onChange(file, fileList) {
+      // console.log('onChange')
+      // console.log(file)
+      this.picFile = file
+      if (fileList.length >= 1) {
+        this.showUpload = true
+      }
+    },
+    httpRequest(param) {
+      console.log('httpRequest')
+      const fd = new FormData()// FormData 对象
+      this.fd = fd
+      this.fd.append('file', param.file)
+      console.log(this.fd)
+    },
+  },
 }
 </script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
-
-.bg-purple-dark {
-  background: #99a9bf;
+.hello >>> .hide .el-upload--picture-card {
+  display: none;
 }
-.bg-purple {
-  background: #d3dce6;
-}
-.bg-purple-light {
-  background: #e5e9f2;
-}
-
 </style>
