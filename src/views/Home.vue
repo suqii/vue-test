@@ -1116,12 +1116,38 @@ export default {
   },
   methods: {
     handleSubmit(ev) {
-      const loginParams = {
-        username: this.ruleForm.account,
-        password: this.ruleForm.checkPass,
-      }
-      console.log('登录参数' + loginParams.username + loginParams.password)
-    },
+          console.log("点击登录");
+            this.axios.post('/api/users/login',{
+                account : this.ruleForm.account,
+                password : this.ruleForm.checkPass,
+                verifyImg : 6666
+            }).then((res)=>{
+                var status = res.data.status;
+                var This = this;
+                if(status === 0){
+                    messageBox({
+                        title : '登录',
+                        content : '登录成功',
+                        ok : '确定',
+                        handleOk(){
+                            This.$router.push('/admin');
+                        }
+                    });
+                }
+                else{
+                     messageBox({
+                        title : '登录',
+                        content : res.data.msg,
+                        ok : '确定'
+                    });
+                }
+
+            });
+        },
+        handleToVerifyImg(ev){
+            ev.target.src = '/api/users/verifyImg?'+Math.random();
+        },
+  
   },
 }
 </script>
