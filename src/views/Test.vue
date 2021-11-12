@@ -9,6 +9,7 @@
       node-key="id"
       default-expand-all
       :expand-on-click-node="false"
+      @node-click="handleNodeClick"
       :render-content="renderContent">
     </el-tree>
   </div>
@@ -92,7 +93,11 @@ export default {
       console.log(this.returnChildren(this.data[0]));
     },
     methods: {
-
+handleNodeClick(node, data){
+  console.log('click');
+  console.log(node);
+  console.log(data);
+},
       // 返回字节点
       returnChildren(data) {
         // data.forEach(item => {
@@ -140,7 +145,7 @@ export default {
   };
 </script>
 
-<style scoped>
+<style>
 .custom-tree-node {
     flex: 1;
     display: flex;
@@ -148,4 +153,9 @@ export default {
     justify-content: space-between;
     font-size: 14px;
     padding-right: 8px;
-  }</style>
+  }
+
+.el-tree-node.is-current > .el-tree-node__content {
+  background-color: red !important;
+}
+  </style>
